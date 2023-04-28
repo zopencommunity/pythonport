@@ -1,5 +1,5 @@
 # Python binary must exist, just locate it and check the version in the .env
-# TODO: One python source is upstreamed, change the buildenv to build it
+# TODO: Once python source is upstreamed, change the buildenv to build it
 export ZOPEN_TYPE="BARE" 
 
 export ZOPEN_NAME="ibm_python"
