@@ -1,4 +1,6 @@
-export ZOPEN_TYPE="BARE"
+# Python binary must exist, just locate it and check the version in the .env
+# TODO: One python source is upstreamed, change the buildenv to build it
+export ZOPEN_TYPE="BARE" 
 
 export ZOPEN_NAME="ibm_python"
 export ZOPEN_CONFIGURE=skip
@@ -18,7 +20,7 @@ cat <<zz
       return 1
   fi
 
-  # Check the Python version
+  # Check the Python version, must be >= Python 3.8
   if ! \$PYTHON_PATH -c "import sys; sys.exit(not(sys.version_info[:2] >= (3, 8)))"; then
       echo "Python version is not supported. Please install Python 3.8 or later."
       return 1
