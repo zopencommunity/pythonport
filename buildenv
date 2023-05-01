@@ -12,7 +12,7 @@ zopen_append_to_env()
 {
 cat <<zz
   # Find the path to Python
-  PYTHON_PATH=\$(PATH="\$ZOPEN_OLD_PATH" type python3 | cut -f3 -d' ')
+  PYTHON_PATH=\$(PATH="\$ZOPEN_OLD_PATH" /bin/type python3 | cut -f3 -d' ')
 
   # If Python is not found, exit with an error message
   if [ -z "\${PYTHON_PATH}" ]; then
