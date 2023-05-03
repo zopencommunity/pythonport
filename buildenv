@@ -16,13 +16,13 @@ cat <<zz
 
   # If Python is not found, exit with an error message
   if [ -z "\${PYTHON_PATH}" ]; then
-      echo "Python not found"
+      echo "Python3 not found. Please install https://www.ibm.com/products/open-enterprise-python-zos"
       return 1
   fi
 
   # Check the Python version, must be >= Python 3.8
   if ! \$PYTHON_PATH -c "import sys; sys.exit(not(sys.version_info[:2] >= (3, 8)))"; then
-      echo "Python version is not supported. Please install Python 3.8 or later."
+      echo "Python version is not supported. Please install Python 3.8 or later - https://www.ibm.com/products/open-enterprise-python-zos"
       return 1
   fi
 
