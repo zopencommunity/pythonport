@@ -2,7 +2,7 @@
 # TODO: Once python source is upstreamed, change the buildenv to build it
 export ZOPEN_TYPE="BARE" 
 
-export ZOPEN_NAME="ibm_python"
+export ZOPEN_NAME="python"
 export ZOPEN_CONFIGURE=skip
 export ZOPEN_CHECK=skip
 export ZOPEN_MAKE=skip
