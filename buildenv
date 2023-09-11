@@ -25,6 +25,10 @@ zopen_check_results()
 zopen_append_to_env()
 {
 cat <<zz
+  if [ -z "\$ZOPEN_IN_ZOPEN_BUILD" ]; then
+    return 0; # Do nothing
+  fi
+
   # Find the path to Python
   echo "This only checks for the presence of python3. It does not install python3"
   PYTHON_PATH=\$(PATH="\$ZOPEN_OLD_PATH" /bin/type python3 | cut -f3 -d' ')
