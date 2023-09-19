@@ -31,23 +31,55 @@ cat <<zz
 
   # Find the path to Python
   echo "This only checks for the presence of python3. It does not install python3"
-  PYTHON_PATH=\$(PATH="\$ZOPEN_OLD_PATH" /bin/type python3 | cut -f3 -d' ')
+  PYTHON_PROG=\$(PATH="\$ZOPEN_OLD_PATH" /bin/type python3 | cut -f3 -d' ')
 
   # If Python is not found, exit with an error message
-  if [ -z "\${PYTHON_PATH}" ]; then
+  if [ -z "\${PYTHON_PROG}" ]; then
       echo "Python3 not found. Please install https://www.ibm.com/products/open-enterprise-python-zos"
       return 1
   fi
 
   # Check the Python version, must be >= Python 3.8
-  if ! \$PYTHON_PATH -c "import sys; sys.exit(not(sys.version_info[:2] >= (3, 8)))"; then
+  if ! \$PYTHON_PROG -c "import sys; sys.exit(not(sys.version_info[:2] >= (3, 8)))"; then
       echo "Python version is not supported. Please install Python 3.8 or later - https://www.ibm.com/products/open-enterprise-python-zos"
       return 1
   fi
 
-  # Set the PATH environment variable to the directory of the Python path
-  export PATH="\$(dirname "\${PYTHON_PATH}"):\${PATH}"
+  # Add the directory of the Python path to the PATH environment variable
+  PYTHON_PATH="\$(dirname "\${PYTHON_PROG}")"
+  export PATH="\${PYTHON_PATH}:\${PATH}"
+
+  # Add the directory of the Python lib path to the LIBPATH environment variable (lib is a peer directory of bin)
+  PYTHON_LIBPATH=\$( cd "\${PYTHON_PATH}/../lib"; echo $PWD)
+  export LIBPATH="\${PYTHON_LIBPATH}:\${LIBPATH}"
+
+  # Check the Python version. If Python 3.11 or greater, add in libzz64.so
+  if \$PYTHON_PROG -c "import sys; sys.exit(not(sys.version_info[:2] >= (3, 11)))"; then
+    OLD_IFS=\$IFS
+    IFS=':'
+    zz64found=false
+    for p in \$ZOPEN_OLD_LIBPATH; do
+      if [ -x "\$p/libzz64.so" ]; then
+        export LIBPATH="\${LIBPATH}:\${p}"
+        zz64found=true
+        break
+      fi
+    done
+    IFS=\$OLD_IFS
+
+    if ! \${zz64found} ; then
+      echo "Unable to find libzz64.so for python"
+      return 1
+    fi
+  fi
+
+  return 0
 zz
+}
+
+zopen_get_version()
+{
+  PATH="$ZOPEN_OLD_PATH" python3 --version | head -1 | awk '{print $2; }'
 }
 
 zopen_install() {
